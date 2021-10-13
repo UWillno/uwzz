@@ -12,17 +12,13 @@ uwzz
 见使用说明
 
 ##### 使用说明
-0.解压zip
+0.下载uwzz.zip,解压zip，
 1.  安装zazhi.apk和uwzz.apk
 2.  xposed框架里勾选uwzz.apk。LSP作用域选为zazhi，重启设备
 3.  修改xml里面对应的中文并保存
 4.  以root运行“xxxx”.sh，推荐用MT管理器执行
 5.  改密码后重复3、4操作
 #### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+我不懂
 
 
