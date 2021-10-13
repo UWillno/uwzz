@@ -1,7 +1,8 @@
 uwzz
 
 ##### 介绍
-一个方法用于淦掉zazhi的教务系统登录和检查函数，以达到直接使用学习通相关功能的目的。需要root和xposed框架。
+  zazhi.apk为我室友所写的一个app，可以从武昌首义学院教务系统获取课表、成绩等信息，也可以使用学习通签到（手动，支持各类签到，二维码签到需二维码图片，无论图片是否过期），随堂测验（查看答案和其他同学答案）相关功能。但使用学习通相关功能必须先登录武昌首义学院教务系统。
+  uwzz为一个方法用于淦掉zazhi的教务系统登录和检查函数，以达到直接使用学习通相关功能的目的。需要root和xposed框架，即让非武昌首义学院的学生也可以使用zazhi的学习通功能。
 
 ##### 软件架构
 我不懂
@@ -25,11 +26,3 @@ uwzz
 4.  新建 Pull Request
 
 
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
