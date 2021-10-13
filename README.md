@@ -1,26 +1,22 @@
-# uwzz
+uwzz
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+介绍
+一个方法用于淦掉zazhi的教务系统登录和检查函数，以达到直接使用学习通相关功能的目的。需要root和xposed框架。
 
-#### 软件架构
-软件架构说明
+软件架构
+我不懂
 
 
-#### 安装教程
+安装教程
+见使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
+使用说明
+0.解压zip
+1.  安装zazhi.apk和uwzz.apk
+2.  xposed框架里勾选uwzz.apk。LSP作用域选为zazhi，重启设备
+3.  修改xml里面对应的中文并保存
+4.  以root运行“xxxx”.sh，推荐用MT管理器执行
+5.  改密码后重复3、4操作
 #### 参与贡献
 
 1.  Fork 本仓库
