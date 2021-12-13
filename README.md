@@ -24,3 +24,9 @@ uwzz
 bug反馈qq群960629141 
 zazhi作者也在内，不保证下一版我也能淦掉。
 
+不会用git，这个md恢复到2个月前的了。。
+zazhi已停更，但仍可使用
+Uwzz随缘更新，且已开源？
+已将部分zazhi功能在Uwzz的webview中实现，以便非root用户使用和自用。
+
+
