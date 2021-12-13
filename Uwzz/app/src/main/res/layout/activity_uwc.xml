@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".uwc">
+        <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="700dp"
+        />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:id="@+id/toold" android:text="课页"
+                    android:layout_marginLeft="1dp"
+            />
+            <Button android:layout_marginLeft="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sssssxxxxx" android:text="刷新"/>
+            <Button android:layout_marginLeft="1dp"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:id="@+id/getanswer" android:text="活动JSON"
+            />
+<!--            <Button android:layout_marginLeft="1dp"-->
+<!--                    android:layout_width="wrap_content" android:layout_height="wrap_content"-->
+<!--                    android:id="@+id/ejs"-->
+<!--                    android:text="测答"/>-->
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
