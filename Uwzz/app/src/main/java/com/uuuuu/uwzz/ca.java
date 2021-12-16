@@ -1,5 +1,7 @@
 package com.uuuuu.uwzz;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.util.Iterator;
 
-import static com.uuuuu.uwzz.uwc.a;
+import static com.uuuuu.uwzz.Uwc.a;
 
 
 public class ca extends AppCompatActivity {

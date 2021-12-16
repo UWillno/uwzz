@@ -3,7 +3,7 @@ package com.uuuuu.uwzz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.uuuuu.uwzz.databinding.ActivityJftjBinding
-import com.uuuuu.uwzz.uwc.a
+import com.uuuuu.uwzz.Uwc.a
 
 
 class jftj : AppCompatActivity() {

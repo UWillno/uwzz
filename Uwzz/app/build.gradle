@@ -4,15 +4,18 @@ plugins {
 }
 
 android {
+
+
     viewBinding {
         enabled = true
     }
 
+
     signingConfigs {
         release {
             storeFile file('C:\\Users\\UWillno\\Desktop\\UWkey\\key.jks')
-            storePassword 'UWillno1224'
             keyAlias 'uwzzkey'
+            storePassword 'UWillno1224'
             keyPassword 'UWillno1224'
         }
     }
@@ -24,7 +27,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.6"
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -6,5 +6,4 @@
     <item android:title="zazhi更新链接" android:id="@+id/http1"/>
     <item android:title="uwzz更新日志" android:id="@+id/uwzz"/>
     <item android:title="跳过教务登录" android:id="@+id/skip"/>
-<!--    <item android:title="跳过教务登录(新)" android:id="@+id/skipnew"/>-->
 </menu>
