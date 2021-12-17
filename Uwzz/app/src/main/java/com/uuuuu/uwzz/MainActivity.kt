@@ -7,9 +7,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -102,26 +104,29 @@ class MainActivity : AppCompatActivity() {
                         "chmod 0660 /data/data/com.example.currilculumdesign/shared_prefs/com.example.currilculumdesign_preferences.xml\n";
                 copyfile("U", op)
                 RootCmd(shell)
-                val re=sh(shell)
-                when(re){
-                    "??"-> Toast.makeText(this, "还是自己手动移动文件吧，我搞不来了！", Toast.LENGTH_LONG).show()
-                    else-> Toast.makeText(this, "不生效就去手动执行sh吧，已放到$re", Toast.LENGTH_LONG).show()
+                val re = sh(shell)
+                when (re) {
+                    "??" -> Toast.makeText(this, "没权限或给了依旧这样，就还是自己手动移动文件吧，我搞不来了！", Toast.LENGTH_LONG).show()
+                    else -> Toast.makeText(this, "不生效就去手动执行sh吧，已放到sd根目录和$re ", Toast.LENGTH_LONG).show()
                 }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun sh(shell: String):String {
+    fun sh(shell: String): String {
         pms(this)
         try {
             val file = File(getExternalFilesDir("UWillno"), "跳过教务登录.sh")
+            val file1 = File("/sdcard/", "跳过教务登录.sh")
+            val ot1=FileOutputStream(file1)
             val ot = FileOutputStream(file)
+            ot1.write(shell.toByteArray())
             ot.write(shell.toByteArray())
             ot.close()
+            ot1.close()
             return getExternalFilesDir("UWillno").toString()
-        }catch (t:Throwable)
-        {
+        } catch (t: Throwable) {
             t.printStackTrace()
             return "??"
         }
@@ -165,14 +170,22 @@ class MainActivity : AppCompatActivity() {
 
 
     fun pms(obj: Activity?) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            for (value in PERMISSIONS_STORAGE) {
-                if (ActivityCompat.checkSelfPermission(
-                        obj!!,
-                        value
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(obj, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE)
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()==false -> {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                val uri: Uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.R -> {
+                for (value in PERMISSIONS_STORAGE) {
+                    if (ActivityCompat.checkSelfPermission(
+                            obj!!,
+                            value
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        ActivityCompat.requestPermissions(obj, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE)
+                    }
                 }
             }
         }
@@ -181,7 +194,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val PERMISSIONS_STORAGE = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
         private const val REQUEST_PERMISSION_CODE = 3
     }

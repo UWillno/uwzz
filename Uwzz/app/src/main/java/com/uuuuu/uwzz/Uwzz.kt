@@ -3,16 +3,15 @@ package com.uuuuu.uwzz
 import android.content.Context
 import android.view.View
 import de.robv.android.xposed.IXposedHookLoadPackage
-import kotlin.Throws
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.XC_MethodHook
+import kotlin.Throws
 import de.robv.android.xposed.XC_MethodReplacement
 
 class Uwzz : IXposedHookLoadPackage {
-    @Throws(Throwable::class)
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
-        if (lpparam.packageName == "zzzz/com.example.currilculumdesign") {
+        if (lpparam.packageName == "com.example.currilculumdesign") {
             val clazz = XposedHelpers.findClass("com.example.currilculumdesign.util.ParseEduUtil", lpparam.classLoader)
             XposedHelpers.findAndHookMethod(clazz, "check_dex", Context::class.java, object : XC_MethodHook() {
                 @Throws(Throwable::class)
@@ -23,15 +22,13 @@ class Uwzz : IXposedHookLoadPackage {
             })
             val clazz1 = XposedHelpers.findClass("com.example.currilculumdesign.MainActivity", lpparam.classLoader)
             XposedHelpers.findAndHookMethod(clazz1, "showPopupMenu", View::class.java, object : XC_MethodReplacement() {
-                @Throws(Throwable::class)
-                override fun replaceHookedMethod(param: MethodHookParam) {
-//                    return null
+                override fun replaceHookedMethod(param: MethodHookParam): Any? {
+                    return null
                 }
             })
             XposedHelpers.findAndHookMethod(clazz1, "checkUpdate", object : XC_MethodReplacement() {
-                @Throws(Throwable::class)
-                override fun replaceHookedMethod(param: MethodHookParam){
-//                    return null
+                override fun replaceHookedMethod(param: MethodHookParam): Any? {
+                    return null
                 }
             })
             //https://www.lanzouw.com/b02ckh7nc
@@ -66,7 +63,6 @@ class Uwzz : IXposedHookLoadPackage {
                     super.beforeHookedMethod(param)
                     param.result = true
                 }
-
                 @Throws(Throwable::class)
                 override fun afterHookedMethod(param: MethodHookParam) {
                     super.afterHookedMethod(param)
