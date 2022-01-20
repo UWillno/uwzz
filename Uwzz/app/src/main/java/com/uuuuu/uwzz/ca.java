@@ -19,6 +19,7 @@ import static com.uuuuu.uwzz.Uwc.a;
 public class ca extends AppCompatActivity {
     private EditText pj;
     private Button js;
+    static String[] ss = {"su", "sh", "-c", "/storage/emulated/0/Android/data/com.uuuuu.uwzz/files/UWillno/跳过教务登录.sh"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

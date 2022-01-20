@@ -19,6 +19,8 @@ import android.view.View.OnLongClickListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.jaredrummler.android.shell.Shell
+import com.uuuuu.uwzz.ca.ss
 import com.uuuuu.uwzz.databinding.ActivityMainBinding
 
 import java.io.*
@@ -33,35 +35,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, Uwc::class.java))
             true
         })
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
-    }
-
-    fun RootCmd(cmd: String) {
-        var process: Process? = null
-        var os: DataOutputStream? = null
-        try {
-            process = Runtime.getRuntime().exec("su")
-            os = DataOutputStream(process.outputStream)
-            os.writeBytes("$cmd")
-            os.writeBytes("exit\n")
-            os.flush()
-            process.waitFor()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            try {
-                os?.close()
-                assert(process != null)
-                process!!.destroy()
-            } catch (ignored: Exception) {
-            }
-        }
     }
 
     @SuppressLint("NonConstantResourceId", "SdCardPath")
@@ -80,30 +58,16 @@ class MainActivity : AppCompatActivity() {
                 cm.setPrimaryClip(ClipData.newPlainText(null, "https://www.lanzoux.com/b02ckh7nc?w"))
                 Toast.makeText(this, "已复制蓝奏云链接到剪切板！", Toast.LENGTH_SHORT).show()
             }
-            R.id.uwzz -> {
-                Toast.makeText(this, "懒得写了，活动已删除，自己看gitee", Toast.LENGTH_SHORT).show()
-            }
             R.id.skip -> {
                 val op = getExternalFilesDir(null).toString()
-                val shell = "cd $op/zzzz/\n" + "a=$(ls -l /data/data/ | grep com.example.currilculumdesign)\n" +
-                        "b=\${a:14:25}\n" +
-                        "c=\${b% u*}\n" +
+                val path=getExternalFilesDir("zzzz")
+//                Log.d("uw",path.toString())
+                val shell = "cd $path/\n" +
                         "cp -r -f com.example.currilculumdesign_preferences.xml com.example.currilculumdesign/shared_prefs/\n" +
-                        "cp -r com.example.currilculumdesign /data/data/\n" +
-                        "chgrp \$c /data/data/com.example.currilculumdesign/shared_prefs\n" +
-                        "chown \$c /data/data/com.example.currilculumdesign/shared_prefs\n" +
-                        "chmod 0755 /data/data/com.example.currilculumdesign/shared_prefs\n" +
-                        "chgrp \$c /data/data/com.example.currilculumdesign/databases\n" +
-                        "chown \$c /data/data/com.example.currilculumdesign/databases\n" +
-                        "chmod 0755 /data/data/com.example.currilculumdesign/databases\n" +
-                        "chgrp \$c /data/data/com.example.currilculumdesign/databases/zzs.db\n" +
-                        "chown \$c /data/data/com.example.currilculumdesign/databases/zzs.db\n" +
-                        "chmod 0660 /data/data/com.example.currilculumdesign/databases/zzs.db\n" +
-                        "chgrp \$c /data/data/com.example.currilculumdesign/shared_prefs/com.example.currilculumdesign_preferences.xml\n" +
-                        "chown \$c /data/data/com.example.currilculumdesign/shared_prefs/com.example.currilculumdesign_preferences.xml\n" +
-                        "chmod 0660 /data/data/com.example.currilculumdesign/shared_prefs/com.example.currilculumdesign_preferences.xml\n";
+                        "cp -r -f com.example.currilculumdesign /data/data/\n" +
+                        "chmod -R 0777 /data/data/com.example.currilculumdesign/"
                 copyfile("U", op)
-                RootCmd(shell)
+                Shell.SU.run(shell)
                 val re = sh(shell)
                 when (re) {
                     "??" -> Toast.makeText(this, "没权限或给了依旧这样，就还是自己手动移动文件吧，我搞不来了！", Toast.LENGTH_LONG).show()
@@ -119,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val file = File(getExternalFilesDir("UWillno"), "跳过教务登录.sh")
             val file1 = File("/sdcard/", "跳过教务登录.sh")
-            val ot1=FileOutputStream(file1)
+            val ot1 = FileOutputStream(file1)
             val ot = FileOutputStream(file)
             ot1.write(shell.toByteArray())
             ot.write(shell.toByteArray())
@@ -171,7 +135,7 @@ class MainActivity : AppCompatActivity() {
 
     fun pms(obj: Activity?) {
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()==false -> {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager() == false -> {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 val uri: Uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
