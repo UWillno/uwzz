@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 定义一组单选按钮 -->
+    <!-- checkableBehavior的可选值由三个：single设置为单选，all为多选，none为普通选项 -->
+    <!--    <group android:checkableBehavior="none">-->
+    <item
+        android:id="@+id/ssqd"
+        android:title="静态签到" />
+    <item
+        android:id="@+id/loqd"
+        android:title="指定位置签到" />
+    <item
+        android:id="@+id/qrqd"
+        android:title="二维码签到" />
+    <!--    </group>-->
+</menu>
