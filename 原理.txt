@@ -1,0 +1,19 @@
+#内容自己填充拼接访问即可 建议都使用旧版界面
+通用签到链接（手势普通码）
+https://mobilelearn.chaoxing.com/v2/apis/sign/signIn?activeId=#
+位置签到链接
+https://mobilelearn.chaoxing.com/pptSign/stuSignajax?address=#&activeId=#&latitude=#&longitude=#fid=0&appType=15&ifTiJiao=1
+获取教师指定位置签到的经纬度信息及名称
+https://mobilelearn.chaoxing.com/v2/apis/active/getPPTActiveInfo?activeId=#
+二维码签到
+https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId=#&enc=#&fid=0
+作业答案提取（玄学） 旧版界面
+找个已完成的作业 替换当前作业的workAnswerId=#并将mooc=？改为mooc=0访问
+随堂测验答案
+https://mobilelearn.chaoxing.com/v2/apis/quiz/getStatisticsData?activeId=#
+拍照签到
+https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId=#&objectId=#
+不提交照片的拍照签到
+https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId=#
+
+部分页面都是字典,怎么数据清洗就看个人了。
