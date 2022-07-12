@@ -9,4 +9,8 @@
         android:id="@+id/hwtj"/>
     <item android:title="课程积分统计"
         android:id="@+id/jftj"/>
+    <item android:title="zazhi登陆"
+        android:id="@+id/zazhi"/>
+    <item android:id="@+id/cktp"
+    android:title="查看签到图片"/>
 </menu>

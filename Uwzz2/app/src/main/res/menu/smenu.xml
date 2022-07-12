@@ -7,6 +7,9 @@
         android:id="@+id/ssqd"
         android:title="静态签到" />
     <item
+        android:id="@+id/pzqd"
+        android:title="拍照签到" />
+    <item
         android:id="@+id/loqd"
         android:title="指定位置签到" />
     <item

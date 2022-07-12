@@ -1,10 +1,12 @@
 package com.uuuuu.uwzz
 
 //import com.uuuuu.uwzz.MainActivity
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -19,11 +21,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
+import com.gyf.immersionbar.ImmersionBar
 import com.uuuuu.uwzz.databinding.ActivityUwcBinding
-import com.uuuuu.uwzz.tj
 import com.uuuuu.uwzz.tj.Companion.getworkAnswerId
 import org.jsoup.Connection
 import org.jsoup.Jsoup
+import java.net.URLEncoder
 import java.util.*
 import java.util.regex.Pattern
 
@@ -48,6 +51,9 @@ class Uwc : AppCompatActivity(), KeyEvent.Callback {
         super.onCreate(savedInstanceState)
         binding = ActivityUwcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        val mi=ImmersionBar.with(this)
+//        mi.statusBarDarkFont(true).statusBarColor(R.color.purple_200).transparentNavigationBar().fitsSystemWindows(true).init()
+
         // 开启JavaScript支持
         val settings = binding.webview.settings
         settings.javaScriptEnabled = true
@@ -70,8 +76,9 @@ class Uwc : AppCompatActivity(), KeyEvent.Callback {
         binding.webview.setWebViewClient(WebViewClient())
         binding.webview.loadUrl(url)
         binding.webview.addJavascriptInterface(JavaObjectJsInterface(), "java_obj")
-
         binding.ky.setOnClickListener { binding.webview.loadUrl("https://mooc1-2.chaoxing.com/visit/courses") }
+
+//        binding.ky.setOnClickListener { binding.webview.loadUrl("https://mooc1-2.chaoxing.com/visit/courses") }
         //        Button qd=findViewById(R.id.qd);
 //        registerForContextMenu(qd);
 
@@ -171,6 +178,40 @@ class Uwc : AppCompatActivity(), KeyEvent.Callback {
                         countDownTimer.start()
                     }
                 }
+                R.id.cktp->{
+
+//                    val connect =
+//                        Jsoup.connect("https://mobilelearn.chaoxing.com/widget/sign/pcTeaSignController/getAttendList?activeId=$str&appType=15&classId=$str2&fid=0")
+//                    this.connection = connect
+//                    val execute =
+//                        connect.ignoreContentType(true).followRedirects(true).cookies(map).method(Connection.Method.GET)
+//                            .timeout(60000).execute()
+//                    this.response = execute
+//                    val parseObject = JSON.parseObject(JSON.parseObject(execute.body()).getString("data"))
+//                    val parseArray: JSONArray = JSON.parseArray(parseObject.getString("yiqianList"))
+//                    val parseArray2: JSONArray = JSON.parseArray(parseObject.getString("weiqianList"))
+//                    val arrayList = ArrayList<Any>()
+//                    val arrayList2 = ArrayList<Any>()
+//                    val it: Iterator<Any> = parseArray.iterator()
+//                    while (it.hasNext()) {
+//                        val jSONObject = it.next() as JSONObject
+//                        arrayList.add(
+//                            AttendListEntity(
+//                                jSONObject.getString("name"),
+//                                "https://p.ananas.chaoxing.com/star3/origin/" + jSONObject.getString("title") + ".jpg"
+//                            )
+//                        )
+//                    }
+//                    val it2: Iterator<Any> = parseArray2.iterator()
+//                    while (it2.hasNext()) {
+//                        arrayList2.add(AttendListEntity((it2.next() as JSONObject).getString("name"), ""))
+//                    }
+//                    val arrayList3 = ArrayList<Any>()
+//                    arrayList3.add(arrayList)
+//                    arrayList3.add(arrayList2)
+//                    return arrayList3
+                    showToast(this, "可能侵权，暂不实现")
+                    }
                 R.id.hwtj -> {
                     binding.webview.webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView, url: String) {
@@ -251,73 +292,239 @@ class Uwc : AppCompatActivity(), KeyEvent.Callback {
                         showToast(applicationContext, "可能签到成功？自己返回刷新页面..我懒得写了")
                     }
                 }
+                R.id.pzqd->{
+//                    showToast(this, "若闪退可能没有指定位置或页面不正确，开学习通随便签")
+                    try {
+                        val aid: String?
+                        val cookieManager: CookieManager = CookieManager.getInstance()
+                        val cookie = cookieManager.getCookie(binding.webview.url)
+//                    Log.d("uw",cookie)
+                        val cookiemap = cookieToMap(cookie)
+                        var info = ""
+                        Thread {
+                            info = Jsoup.connect("https://sso.chaoxing.com/apis/login/userLogin4Uname.do")
+                                .cookies(cookiemap)
+                                .get().toString()
+                        }.start()
+                        Log.d("uw", info)
+//    print("\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()[0].value)
+                        var uid = ""
+                        var realname = ""
+                        for (i in "\"puid\":[0-9|.]+".toRegex().findAll(info).toList()) {
+                            uid = ((i.value.split(":")[1].toString()))
+                        }
+                        for (i in "\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()) {
+                            realname = (i.value.split(":")[1].replace("\"", ""))
+                        }
+                        val activeId = "activeId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+
+                        val courseId = "courseId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+                        val classId = "classId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+                        val paid = "[0-9]+".toRegex().findAll(activeId).toList()[0].value.trim()
+                        val url0 =
+                            "https://mobilelearn.chaoxing.com/newsign/preSign?$courseId&$classId&activePrimaryId=$paid&general=1&sys=1&ls=1&appType=15&&tid=&uid=$uid&ut=s"
+
+                        Log.d("uw", url0)
+                        if (gid(binding.webview.url) != null) {
+                            Thread {
+                                val con0 = Jsoup.connect(url0)
+                                val con = Jsoup.connect("https://mobilelearn.chaoxing.com/pptSign/stuSignajax?$activeId")
+//                                val con = Jsoup.connect("https://mobilelearn.chaoxing.com/pptSign/stuSignajax?$activeId&objectId=")
+                                con0.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                    .method(
+                                        Connection.Method.GET
+                                    ).timeout(60000).execute()
+                                con.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                    .method(
+                                        Connection.Method.GET
+                                    ).timeout(60000).execute()
+                            }.start()
+                            binding.webview.reload()
+                            showToast(this, "我猜签到成功了？")
+                        }
+                    } catch (_: Exception) {
+                    }
+//                    val connect = Jsoup.connect(
+//                        "https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId=$str" + "&objectId="
+//                        )
+//                    )
+//                    connect.ignoreContentType(true).followRedirects(true).cookies(map).method(Connection.Method.GET)
+//                            .timeout(60000).execute()
+                }
                 R.id.loqd -> {
-                    val aid: String?
+                    showToast(this, "若闪退可能没有指定位置或页面不正确，开学习通随便签")
+                    try {
+                        val aid: String?
+                        val cookieManager: CookieManager = CookieManager.getInstance()
+                        val cookie = cookieManager.getCookie(binding.webview.url)
+//                    Log.d("uw",cookie)
+                        val cookiemap = cookieToMap(cookie)
+                        var info = ""
+                        Thread {
+                            info = Jsoup.connect("https://sso.chaoxing.com/apis/login/userLogin4Uname.do")
+                                .cookies(cookiemap)
+                                .get().toString()
+                        }.start()
+                        Log.d("uw", info)
+//    print("\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()[0].value)
+                        var uid = ""
+                        var realname = ""
+                        for (i in "\"puid\":[0-9|.]+".toRegex().findAll(info).toList()) {
+                            uid = ((i.value.split(":")[1].toString()))
+                        }
+                        for (i in "\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()) {
+                            realname = (i.value.split(":")[1].replace("\"", ""))
+                        }
+                        val activeId = "activeId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+
+                        val courseId = "courseId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+                        val classId = "classId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                            .toList()[0].value.trim()
+                        val paid = "[0-9]+".toRegex().findAll(activeId).toList()[0].value.trim()
+                        val url0 =
+                            "https://mobilelearn.chaoxing.com/newsign/preSign?$courseId&$classId&activePrimaryId=$paid&general=1&sys=1&ls=1&appType=15&&tid=&uid=$uid&ut=s"
+
+                        Log.d("uw", url0)
+                        if (gid(binding.webview.url) != null) {
+                            aid = gid(binding.webview.url)
+                            val connect = Jsoup.connect(
+                                "https://mobilelearn.chaoxing.com/v2/apis/active/getPPTActiveInfo?activeId=" + aid
+
+                            )
+                            Thread {
+                                var response =
+                                    connect.ignoreContentType(true).followRedirects(true)
+                                        .cookies(cookiemap)
+                                        .method(
+                                            Connection.Method.GET
+                                        ).timeout(60000).execute()
+                                val parseObject: JSONObject =
+                                    JSON.parseObject(
+                                        JSON.parseObject(response.body()).getString("data")
+                                    )
+                                val hashMap = HashMap<Any, Any>()
+//                            hashMap["signCode"] = parseObject.getString("signCode")
+//                            hashMap["ifphoto"] = parseObject.getString("ifphoto")
+                                hashMap["locationText"] = parseObject.getString("locationText")
+                                hashMap["locationLatitude"] = parseObject.getString("locationLatitude")
+                                hashMap["locationLongitude"] =
+                                    parseObject.getString("locationLongitude")
+//                            Log.d("uw",hashMap.toString())
+//                            Log.d("uw","https://mobilelearn.chaoxing.com/pptSign/stuSignajax?address=" + hashMap.get("place"))
+                                val con0 = Jsoup.connect(url0)
+                                val con = Jsoup.connect(
+                                    "https://mobilelearn.chaoxing.com/pptSign/stuSignajax?address=" + hashMap.get(
+                                        "locationText"
+                                    )
+                                        .toString() + "&activeId=" + aid + "&latitude=" + hashMap.get(
+                                        "locationLatitude"
+                                    ).toString() + "&longitude=" + hashMap.get("locationLongitude")
+                                        .toString() + "&fid=0&appType=15&ifTiJiao=1"
+                                )
+                                con0.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                    .method(
+                                        Connection.Method.GET
+                                    ).timeout(60000).execute()
+                                con.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                    .method(
+                                        Connection.Method.GET
+                                    ).timeout(60000).execute()
+                            }.start()
+                            binding.webview.reload()
+                            showToast(this, "我猜签到成功了？")
+                        }
+                    } catch (_: Exception) {
+                    }
+                }
+                R.id.qrqd -> {
                     val cookieManager: CookieManager = CookieManager.getInstance()
                     val cookie = cookieManager.getCookie(binding.webview.url)
 //                    Log.d("uw",cookie)
                     val cookiemap = cookieToMap(cookie)
-//                    Log.d("uw", cookiemap.toString())
-                    if (gid(binding.webview.url) != null) {
-                        aid = gid(binding.webview.url)
-                        val connect = Jsoup.connect(
-                            "https://mobilelearn.chaoxing.com/v2/apis/active/getPPTActiveInfo?activeId=" + aid
-
-                        )
-                        Thread {
-                            var response =
-                                connect.ignoreContentType(true).followRedirects(true)
-                                    .cookies(cookiemap)
-                                    .method(
-                                        Connection.Method.GET
-                                    ).timeout(60000).execute()
-                            val parseObject: JSONObject =
-                                JSON.parseObject(
-                                    JSON.parseObject(response.body()).getString("data")
-                                )
-                            val hashMap = HashMap<Any, Any>()
-//                            hashMap["signCode"] = parseObject.getString("signCode")
-//                            hashMap["ifphoto"] = parseObject.getString("ifphoto")
-                            hashMap["locationText"] = parseObject.getString("locationText")
-                            hashMap["locationLatitude"] = parseObject.getString("locationLatitude")
-                            hashMap["locationLongitude"] =
-                                parseObject.getString("locationLongitude")
-//                            Log.d("uw",hashMap.toString())
-//                            Log.d("uw","https://mobilelearn.chaoxing.com/pptSign/stuSignajax?address=" + hashMap.get("place"))
-                            val con = Jsoup.connect(
-                                "https://mobilelearn.chaoxing.com/pptSign/stuSignajax?address=" + hashMap.get(
-                                    "locationText"
-                                )
-                                    .toString() + "&activeId=" + aid + "&latitude=" + hashMap.get(
-                                    "locationLatitude"
-                                ).toString() + "&longitude=" + hashMap.get("locationLongitude")
-                                    .toString() + "&fid=0&appType=15&ifTiJiao=1"
-                            )
-                            con.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
-                                .method(
-                                    Connection.Method.GET
-                                ).timeout(60000).execute()
-                        }.start()
-                        showToast(this, "我猜签到成功了？")
-                        showToast(this,"不成功可能没有指定位置，开学习通随便签")
+                    var info = ""
+                    Thread {
+                        info = Jsoup.connect("https://sso.chaoxing.com/apis/login/userLogin4Uname.do")
+                            .cookies(cookiemap)
+                            .get().toString()
+                    }.start()
+                    Log.d("uw", info)
+//    print("\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()[0].value)
+                    var uid = ""
+                    var realname = ""
+                    for (i in "\"puid\":[0-9|.]+".toRegex().findAll(info).toList()) {
+                        uid = ((i.value.split(":")[1].toString()))
                     }
-                }
-                R.id.qrqd -> {
+                    for (i in "\"realname\":\"[\\u4E00-\\u9FA5]+\"".toRegex().findAll(info).toList()) {
+                        realname = (i.value.split(":")[1].replace("\"", ""))
+                    }
+                    val activeId = "activeId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                        .toList()[0].value.trim()
+
+                    val courseId = "courseId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                        .toList()[0].value.trim()
+                    val classId = "classId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                        .toList()[0].value.trim()
+                    val paid = "[0-9]+".toRegex().findAll(activeId).toList()[0].value.trim()
+                    val url0 =
+                        "https://mobilelearn.chaoxing.com/newsign/preSign?$courseId&$classId&activePrimaryId=$paid&general=1&sys=1&ls=1&appType=15&&tid=&uid=$uid&ut=s"
+
+                    Log.d("uw", url0)
+
                     val editText = EditText(this)
                     val builder = AlertDialog.Builder(this)
-                    builder.setTitle("输入enc部分内容").setIcon(R.drawable.mm).setView(editText)
+                    builder.setTitle("输入enc").setIcon(R.drawable.mm).setView(editText)
                         .setNegativeButton("取消", null)
                     builder.setPositiveButton("确认") { dialog: DialogInterface?, a: Int ->
                         if (gid(
                                 binding.webview.url
                             ) != null
                         ) {
-                            binding.webview.loadUrl(
-                                "https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId=" + gid(
-                                    binding.webview.url
-                                ) + "&enc=" + editText.text.toString() + "&fid=0"
-                            )
-                            showToast(applicationContext, "可能签到成功？自己返回刷新页面..我懒得写了")
+                            try {
+//                                val uid = editText.text.toString().split('#')[0].trim()
+                                val name = URLEncoder.encode(realname, "utf8").trim()
+                                val enc = editText.text.toString().trim()
+                                val activeId = "activeId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                                    .toList()[0].value.trim()
+                                val fid = "fid=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                                    .toList()[0].value.trim()
+                                val courseId = "courseId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                                    .toList()[0].value.trim()
+                                val classId = "classId=[0-9]+".toRegex().findAll(binding.webview.url.toString())
+                                    .toList()[0].value.trim()
+                                val paid = "[0-9]+".toRegex().findAll(activeId).toList()[0].value.trim()
+//                                val url0 =
+//                                    "https://mobilelearn.chaoxing.com/newsign/preSign?$courseId&$classId&activePrimaryId=$paid&general=1&sys=1&ls=1&appType=15&&tid=&uid=$uid&ut=s"
+//                                binding.webview.loadUrl(url0);
+                                Log.d("uw", url0)
+                                val url =
+                                    "https://mobilelearn.chaoxing.com/pptSign/stuSignajax?enc=$enc&name=$name&$activeId&uid=$uid&clientip=&useragent=&latitude=-1&longitude=-1&$fid&appType=15".trim()
+                                Thread{
+                                    val con0=Jsoup.connect(url0)
+                                    val con=Jsoup.connect(url)
+                                    con0.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                        .method(
+                                            Connection.Method.GET
+                                        ).timeout(60000).execute()
+                                    con.ignoreContentType(true).followRedirects(true).cookies(cookiemap)
+                                        .method(
+                                            Connection.Method.GET
+                                        ).timeout(60000).execute()
+                                }.start()
+//                                Log.d("uw", url)
+                                binding.webview.reload()
+
+                            } catch (_: java.lang.Exception) {
+
+                            }
+
+
+////
+                            showToast(applicationContext, "可能签到成功？自己刷新页面..我懒得写了")
                         }
                     }
                     builder.show()
@@ -503,5 +710,14 @@ class Uwc : AppCompatActivity(), KeyEvent.Callback {
             return null
         }
     }
+
+//    override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+//        val clazz4 = XposedHelpers.findClass(
+//            "",
+//            lpparam.classLoader)
+//        Log.d("uw", clazz4.declaredFields.toString())
+////        return true
+//    }
+
 
 }
