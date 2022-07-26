@@ -3,7 +3,6 @@ from importlib.resources import path
 from urllib import response
 import requests
 import mainw
-from progressBar import ProgressBar
 import mainw
 
 def downCourseImage(url):

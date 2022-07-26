@@ -18,7 +18,6 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import download
-from progressBar import ProgressBar, pyqtbar
 import shutil
 
 def rm(path):
