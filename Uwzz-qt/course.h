@@ -1,6 +1,10 @@
 #ifndef COURSE_H
 #define COURSE_H
 
+#include "activity.h"
+#include "homework.h"
+#include "homeworkpoints.h"
+#include "points.h"
 #include <QObject>
 
 class Course : public QObject
@@ -15,6 +19,8 @@ class Course : public QObject
 public:
     explicit Course(QString name,QString classId,QString courseId,QString image, QObject *parent = nullptr);
 
+    QList<Activity*> activitylist;
+
     const QString &getName() const;
     void setName(const QString &newName);
 
@@ -27,6 +33,12 @@ public:
     const QString &getImage() const;
     void setImage(const QString &newImage);
 
+    const QList<Points *> &getPointsList() const;
+    void setPointsList(const QList<Points *> &newPointsList);
+    QList<Points*> PointsList;
+    QList<HomeWork*> HomeWorkList;
+    QList<HomeWorkPoints*> HomeWorkPointsList;
+
 signals:
 
 
@@ -38,6 +50,8 @@ signals:
 
     void imageChanged();
 
+    void PointsListChanged();
+
 private:
     QString name;
     QString classId;
@@ -45,6 +59,8 @@ private:
     QString image;
 
 
+
+    Q_PROPERTY(QList<Points *> PointsList READ getPointsList WRITE setPointsList NOTIFY PointsListChanged)
 };
 
 #endif // COURSE_H

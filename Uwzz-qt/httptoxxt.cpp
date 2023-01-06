@@ -10,13 +10,15 @@ HttpToXxt::HttpToXxt(QObject *parent)
     settings = new QSettings("./config.ini",QSettings::IniFormat,this);
     m_username = settings->value("username").toString();
     m_password = settings->value("password").toString();
+    m_request.setRawHeader("user-agent","Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36 Edg/107.0.1418.52");
+    m_request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     qInfo() << m_username;
     qInfo() << m_password;
-    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::loginStatus);
     if(m_username!="" || m_password != "")
         login();
 
 }
+//https://passport2-api.chaoxing.com/v11/loginregister?cx_xxt_passport=json&uname=17671056113&code=zhj775825
 
 void HttpToXxt::login()
 {
@@ -25,7 +27,7 @@ void HttpToXxt::login()
     //    m_thread = new QThread(this);
     //    m_thread.
     //    url=QUrl::toPercentEncoding(url);
-    //    m_request=new QNetworkRequest(url);
+    m_request.setUrl(url);
 
     //    QSslConfiguration config;
     //    QSslConfiguration conf = m_request->sslConfiguration();
@@ -33,8 +35,9 @@ void HttpToXxt::login()
     //    conf.setProtocol(QSsl::AnyProtocol);
     //    m_request->setSslConfiguration(conf);
 
-
-    m_reply=m_manager->get(QNetworkRequest(url));
+    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::loginStatus);
+    //    m_reply=m_manager->get(QNetworkRequest(url));
+    m_reply=m_manager->get(m_request);
 }
 
 void HttpToXxt::save()
@@ -58,7 +61,9 @@ void HttpToXxt::loginStatus()
         emit loginS();
         disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::loginStatus);
         connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getCourses);
-        m_reply=m_manager->get(QNetworkRequest(QUrl("https://mooc1-2.chaoxing.com/visit/courses/study?isAjax=true")));
+        //        m_reply=m_manager->get(QNetworkRequest(QUrl("https://mooc1-2.chaoxing.com/visit/courses/study?isAjax=true")));
+        m_request.setUrl(QUrl("https://mooc1-2.chaoxing.com/visit/courses/study?isAjax=true"));
+        m_reply=m_manager->get(m_request);
     }else{
         qInfo() << "未知错误？？";
     }
@@ -67,6 +72,8 @@ void HttpToXxt::loginStatus()
 
 }
 
+
+
 void HttpToXxt::getCourses()
 {
     //
@@ -74,12 +81,13 @@ void HttpToXxt::getCourses()
     //       ex("(?<=clazzid=)([0-9]+)")
     //    QRegExp rx("(?<=blank\\\\\" title=\\\\\")([\\s\\S]*?)(?=\\\\\">)");
 
-    QStringList list;
+    //    QStringList list;
     QString result=m_reply->readAll();
     courseList=m_dp->parseCourse(result);
 
-
+    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getCourses);
     emit coursesRefreshed(courseList);
+    this->setUid();
 
     //    QQmlListProperty<Course> qmlCourses(this,&courseList);
     //    emit coursesRefreshed(qmlCourses);
@@ -117,6 +125,165 @@ void HttpToXxt::getCourses()
 
 }
 
+void HttpToXxt::getActivityList(int index)
+{
+    QString url("https://widget-course.chaoxing.com/widget/weixin/stucourse/activelist?DB_STRATEGY=COURSEID&STRATEGY_PARA=courseId&fid=31430&courseId="+courseList[index]->getCourseId()+"&classId="+courseList[index]->getClassId()+"&activeTypes=2%2C4%2C5%2C11%2C23%2C42%2C43%2C14%2C51%2C35%2C44%2C48");
+    currentIndex=index;
+    m_request.setUrl(url);
+    m_reply=m_manager->get(m_request);
+    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::parseActivities);
+}
+
+void HttpToXxt::parseActivities()
+{
+    if(m_dp->parseActivities(m_reply->readAll(),courseList[currentIndex])){
+        emit this->onActivityParseFinished();
+    }
+    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::parseActivities);
+
+}
+
+void HttpToXxt::getAcademic(int index)
+{
+    currentIndex=index;
+    QString url("https://stat2-ans.chaoxing.com/study-data/sign");
+    m_request.setUrl(url);
+    QByteArray data(("clazzid="+this->courseList[index]->getClassId()+"&courseid="+this->courseList[index]->getCourseId()).toUtf8());
+    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getSignStatistics);
+    m_reply=m_manager->post(m_request,data);
+
+
+}
+
+void HttpToXxt::getSignStatistics()
+{
+    if(m_reply->error()) return;
+    //    qInfo()<<QString(m_reply->readAll());
+    m_dp->parseSignStatistics(m_reply->readAll());
+    //        emit signStatisticsSignal();
+    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getSignStatistics);
+
+    QString url("https://mobilelearn.chaoxing.com/v2/apis/integral/getIntegralList?DB_STRATEGY=COURSEID&STRATEGY_PARA=courseId&pageSize=200&page=1&classId="+courseList[currentIndex]->getClassId()+"&courseId="+courseList[currentIndex]->getCourseId());
+    m_request.setUrl(url);
+    qInfo() << url;
+    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getPointsStatistics);
+    m_reply=m_manager->get(m_request);
+}
+
+void HttpToXxt::getPointsStatistics()
+{
+    //    m_reply->readAll()
+    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getPointsStatistics);
+    m_dp->parsePointsStatistics(m_reply->readAll(),courseList[currentIndex]);
+    //    emit onStatisticsParsed();
+    getHomeworkStatistics();
+
+}
+
+void HttpToXxt::getHomeworkStatistics()
+{
+    QEventLoop loop;
+    connect(m_manager,&QNetworkAccessManager::finished,&loop,&QEventLoop::quit);
+    QString url("https://stat2-ans.chaoxing.com/work-stastics/works?clazzid=" +courseList[currentIndex]->getClassId() + "&courseid=" + courseList[currentIndex]->getCourseId() + "&page=1&pageSize=200&order=0");
+    qInfo() << url;
+
+    m_request.setUrl(url);
+    m_reply=m_manager->get(m_request);
+    loop.exec();
+    QByteArray data1=m_reply->readAll();
+
+    url="https://stat2-ans.chaoxing.com/work-stastics/student-works?clazzid=" +courseList[currentIndex]->getClassId() + "&courseid=" + courseList[currentIndex]->getCourseId() + "&page=1&pageSize=200";
+    m_request.setUrl(url);
+    qInfo()<<url;
+    m_reply=m_manager->get(m_request);
+    loop.exec();
+    QByteArray data2=m_reply->readAll();
+    //    QByteArray data2;
+    disconnect(m_manager,&QNetworkAccessManager::finished,&loop,&QEventLoop::quit);
+    m_dp->parseHomeworkStatistics(data1,data2,courseList[currentIndex]);
+    emit onStatisticsParsed();
+
+}
+
+const QString &HttpToXxt::getName() const
+{
+    return name;
+}
+
+void HttpToXxt::setName(const QString &newName)
+{
+    if (name == newName)
+        return;
+    name = newName;
+    emit nameChanged();
+}
+
+int HttpToXxt::getUid() const
+{
+    return uid;
+}
+
+void HttpToXxt::setUid()
+{
+    QEventLoop loop;
+    QString url("https://stat2-ans.chaoxing.com/study-data/sign");
+    m_request.setUrl(url);
+    QByteArray data(("clazzid="+this->courseList[0]->getClassId()+"&courseid="+this->courseList[0]->getCourseId()).toUtf8());
+    QObject::connect(m_manager,&QNetworkAccessManager::finished,&loop,&QEventLoop::quit);
+    m_reply=m_manager->post(m_request,data);
+    loop.exec();
+    QJsonDocument document=QJsonDocument::fromJson(m_reply->readAll());
+    qInfo() << document;
+    QJsonObject object=document.object();
+    if(!object.isEmpty()){
+        uid = object.value("uid").toInt();
+        //       qInfo() << uid;
+        //       qInfo() <<  object.value("uid");
+    }
+    url="https://sso.chaoxing.com/apis/login/userLogin4Uname.do";
+    m_request.setUrl(url);
+    m_reply=m_manager->get(m_request);
+    loop.exec();
+    //    QStringList nameList;
+    QRegularExpression re;
+    re.setPattern("(?<=\",\"name\":\")([\\s\\S]*?)(?=\",\")");
+    //    qInfo() << re.isValid();
+    QRegularExpressionMatchIterator i = re.globalMatch(QString(m_reply->readAll()));
+    while (i.hasNext()) {
+        QRegularExpressionMatch match = i.next();
+        name = match.captured(1);
+        qInfo() << name;
+        break;
+    }
+    QObject::disconnect(m_manager,&QNetworkAccessManager::finished,&loop,&QEventLoop::quit);
+}
+
+const QList<Course *> &HttpToXxt::getCourseList() const
+{
+    return courseList;
+}
+
+void HttpToXxt::setCourseList(const QList<Course *> &newCourseList)
+{
+    if (courseList == newCourseList)
+        return;
+    courseList = newCourseList;
+    emit courseListChanged();
+}
+
+DocumentParse *HttpToXxt::dp() const
+{
+    return m_dp;
+}
+
+void HttpToXxt::setDp(DocumentParse *newDp)
+{
+    if (m_dp == newDp)
+        return;
+    m_dp = newDp;
+    emit dpChanged();
+}
+
 //QQmlListProperty<Course> HttpToXxt::courses()
 //{
 //    return QQmlListProperty<Course>(this,&this->courseList);
@@ -133,8 +300,8 @@ void HttpToXxt::setPassword(const QString &newPassword)
 
 void HttpToXxt::logout()
 {
-    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getCourses);
-    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::loginStatus);
+    //    disconnect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::getCourses);
+    //    connect(m_manager,&QNetworkAccessManager::finished,this,&HttpToXxt::loginStatus);
 }
 
 const QString &HttpToXxt::username() const

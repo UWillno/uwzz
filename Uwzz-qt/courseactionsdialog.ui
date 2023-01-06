@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CourseActionsDialog</class>
+ <widget class="QDialog" name="CourseActionsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>269</width>
+    <height>42</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QPushButton" name="statisticsBtn">
+     <property name="text">
+      <string>学情统计</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="activeBtn">
+     <property name="text">
+      <string>活动列表</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

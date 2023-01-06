@@ -6,7 +6,10 @@
 #include <QQuickWidget>
 #include <QQmlContext>
 #include <QListWidgetItem>
-
+#include <QButtonGroup>
+#include "academicstatisticswidget.h"
+#include "courseactionsdialog.h"
+#include "documentparse.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -32,8 +35,20 @@ private slots:
 
     void on_logoutBtn_clicked();
 
+    void on_courseLw_itemClicked(QListWidgetItem *item);
+
+    void on_MainWindow_customContextMenuRequested(const QPoint &pos);
+    void getactivitylist(QAction *action);
+    void showActivityWidget();
+    void preAcademicStatistics(QAction *action);
+    void execAcademicStatistics();
+//    void on_courseLw_itemPressed(QListWidgetItem *item);
+
 private:
+//    CourseActionsDialog *dialog;
     Ui::MainWindow *ui;
     HttpToXxt *httptoxxt;
+    QMenu *listMn;
+
 };
 #endif // MAINWINDOW_H

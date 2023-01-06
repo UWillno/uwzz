@@ -57,5 +57,18 @@ void Course::setImage(const QString &newImage)
     emit imageChanged();
 }
 
+const QList<Points *> &Course::getPointsList() const
+{
+    return PointsList;
+}
+
+void Course::setPointsList(const QList<Points *> &newPointsList)
+{
+    if (PointsList == newPointsList)
+        return;
+    PointsList = newPointsList;
+    emit PointsListChanged();
+}
+
 
 

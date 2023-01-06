@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AcademicStatisticsWidget</class>
+ <widget class="QWidget" name="AcademicStatisticsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_8">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="QWidget" name="tab1">
+      <attribute name="title">
+       <string>出勤统计</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="signCount">
+           <property name="text">
+            <string>签到：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="signPer">
+           <property name="text">
+            <string>签到率：</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QChartView" name="signGraphicsView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab2">
+      <attribute name="title">
+       <string>积分统计</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="quizScore">
+             <property name="text">
+              <string>随堂练习：</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="discussScore">
+             <property name="text">
+              <string>主题讨论：</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QLabel" name="pickScore">
+             <property name="text">
+              <string>选人：</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="voteScore">
+             <property name="text">
+              <string>投票：</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="answerScore">
+             <property name="text">
+              <string>抢答：</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="otherScore">
+             <property name="text">
+              <string>其他：</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="score">
+           <property name="text">
+            <string>课堂积分：</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="pointsTable">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>姓名</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>课堂积分</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>选人</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>抢答</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>主题讨论</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>投票</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>其他</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab3">
+      <attribute name="title">
+       <string>作业统计</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="workprogress">
+           <property name="text">
+            <string>进度：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="workavg">
+           <property name="text">
+            <string>平均分：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTabWidget" name="hwTabWidget">
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <widget class="QWidget" name="tab">
+            <attribute name="title">
+             <string>作业情况</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QTableWidget" name="hwTable1">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <column>
+                <property name="text">
+                 <string>作业名</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>发布数</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>提交数</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>平均分</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>满分</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>问题数</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_2">
+            <attribute name="title">
+             <string>得分情况</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QTableWidget" name="hwTable2">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <column>
+                <property name="text">
+                 <string>姓名</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>批阅数</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>提交数</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>完成数</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>最高分</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>最低分</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>平均分</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="closetab">
+      <attribute name="title">
+       <string>关闭</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">qchartview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
