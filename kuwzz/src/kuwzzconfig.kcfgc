@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2023 UWillno <uwillno@outlook.com>
+# SPDX-License-Identifier: LGPL-2.0-or-later
+
+File=kuwzzconfig.kcfg
+ClassName=KUwzzConfig
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true
+Singleton=true

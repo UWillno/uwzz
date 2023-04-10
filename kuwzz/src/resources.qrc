@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="main.qml">contents/ui/main.qml</file>
+        <file alias="About.qml">contents/ui/About.qml</file>
+        <file>XxtWebPage.qml</file>
+        <file>LoginSheet.qml</file>
+        <file>InfoSheet.qml</file>
+    </qresource>
+</RCC>
