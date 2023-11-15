@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Logic.qml</file>
+        <file>User.qml</file>
+    </qresource>
+</RCC>
